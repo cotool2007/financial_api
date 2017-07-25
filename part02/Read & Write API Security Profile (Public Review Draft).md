@@ -237,17 +237,17 @@ While the name ID Token suggests that it is something that provides the identity
 
 名前IDトークンはリソース所有者（サブジェクト）のIDを提供するものであることを示していますが、必ずしもそうであるとは限りません。 発行者識別子を含めることによって認可サーバーを識別しますが、一時的なサブジェクト識別子を持つことはまったく問題ありません。 この場合、IDトークンは発行者の認証応答への切り離された署名として機能し、IDトークンを切り離された署名として動作させるのはOpenID Connect Coreの明示的な設計決定でした。
 
-This document leverages on this fact and protects the authorization response by including the hash of all of the unprotected response parameters, i.e. code and state.
+This document leverages on this fact and protects the authorization response by including the hash of all of the unprotected response parameters, i.e. ``code`` and ``state``.
 
 この文書は、この事実を利用して、保護されていないすべての応答パラメータ、つまりコードと状態のハッシュを含めることによって、認証応答を保護します。
 
-While the hash of the code is defined in [OIDC], the hash of the state is not defined. Thus this document defines it as follows.
+While the hash of the ``code`` is defined in [OIDC], the hash of the ``state`` is not defined. Thus this document defines it as follows.
 
 コードのハッシュは[OIDC]で定義されていますが、状態のハッシュは定義されていません。 したがって、この文書では以下のように定義しています。
 
-** s_hash **
+`` ** s_hash ** ``
 
-State hash value. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the state value, where the hash algorithm used is the hash algorithm used in the alg Header Parameter of the ID Token's JOSE Header. For instance, if the alg is HS512, hash the state value with SHA-512, then take the left-most 256 bits and base64url encode them. The s_hash value is a case sensitive string.
+State hash value. Its value is the base64url encoding of the left-most half of the hash of the octets of the ASCII representation of the ``state`` value, where the hash algorithm used is the hash algorithm used in the ``alg`` Header Parameter of the ID Token's JOSE Header. For instance, if the ``alg`` is ``HS512``, hash the state value with SHA-512, then take the left-most 256 bits and base64url encode them. The ``s_hash`` value is a case sensitive string.
 
 状態ハッシュ値。 その値は、状態値のASCII表現のオクテットのハッシュの左端の半分のbase64urlエンコーディングであり、使用されるハッシュアルゴリズムはIDトークンのJOSEヘッダーのalgヘッダーパラメーターで使用されるハッシュアルゴリズムです。 たとえば、algがHS512の場合、SHA-512で状態値をハッシュし、次に左端の256ビットを取り、base64urlでそれらをエンコードします。 s_hash値は、大文字と小文字を区別する文字列です。
 
@@ -275,25 +275,27 @@ In addition, the Authorization server, for the write operation,
 
 さらに、書き込み操作のためのAuthorizationサーバーは、
 
-	1. shall require the request or request_uri parameter to be passed as a JWS signed JWT as in clause 6 of [OIDC];  
-	2. shall require the response_type values code id_token or code id_token token;  
-	3. shall return ID Token as a detached signature to the authorization response;  
-	4. shall include state hash, s_hash, in the ID Token to protect the state value;  
-	5. shall only issue holder of key authorization code, access token, and refresh token for write operations;  
-	6. shall support [OAUTB] or [MTLS] as a holder of key mechanism;  
-	7. shall support user authentication at LoA 3 or greater as defined in [X.1254];  
-	8. shall support signed ID Tokens; and  
-	9. should support signed and encrypted ID Token.  
+1. shall require the ``request`` or ``request_uri`` parameter to be passed as a JWS signed JWT as in clause 6 of [OIDC];  
+2. shall require the ``response_type`` values ``code id_token`` or ``code id_token token``;  
+3. shall return ID Token as a detached signature to the authorization response;  
+4. shall include state hash, ``s_hash``, in the ID Token to protect the ``state`` value;  
+5. shall only issue holder of key authorization code, access token, and refresh token for write operations;  
+6. shall support [OAUTB] or [MTLS] as a holder of key mechanism;  
+7. shall support user authentication at LoA 3 or greater as defined in [X.1254];  
+8. shall support signed ID Tokens; and  
+9. should support signed and encrypted ID Token.  
 
-	1. [OIDC]の第6項のようにJWS署名JWTとして要求またはrequest_uriパラメータを渡す必要があります。  
-	2. response_type値code id_tokenまたはコードid_tokenトークンが必要です。  
-	3. IDトークンを拒否された署名として認証応答に返す。  
-	4. 状態値を保護するためにIDトークンに状態ハッシュ、s_hashを含める。  
-	5. 書き込み操作のためにキー認証コード、アクセストークン、リフレッシュトークンの所有者のみを発行しなければならない。  
-	6. キーメカニズムの保持者として[OAUTB]または[MTLS]をサポートしなければならない。  
-	7. [X.1254]で定義されているLoA 3以上のユーザ認証をサポートしなければならない。  
-	8. 署名付きIDトークンをサポートしなければならない。 そして  
-	9. 署名付きで暗号化されたIDトークンをサポートする必要があります。
+//NG
+
+1. [OIDC]の第6項のようにJWS署名JWTとして要求またはrequest_uriパラメータを渡す必要があります。  
+2. response_type値code id_tokenまたはコードid_tokenトークンが必要です。  
+3. IDトークンを拒否された署名として認証応答に返す。  
+4. 状態値を保護するためにIDトークンに状態ハッシュ、s_hashを含める。  
+5. 書き込み操作のためにキー認証コード、アクセストークン、リフレッシュトークンの所有者のみを発行しなければならない。  
+6. キーメカニズムの保持者として[OAUTB]または[MTLS]をサポートしなければならない。  
+7. [X.1254]で定義されているLoA 3以上のユーザ認証をサポートしなければならない。  
+8. 署名付きIDトークンをサポートしなければならない。 そして  
+9. 署名付きで暗号化されたIDトークンをサポートする必要があります。
 
 
 #### 5.2.3.  Public Client
@@ -304,27 +306,27 @@ A Public Client shall support the provisions specified in clause 5.2.3 of Financ
 
 In addition, the Public Client
 
-	1. shall support [OAUTB] as a holder of key mechanism;  
-	2.shall include the request or request_uri parameter as defined in Section 6 of [OIDC] in the authentication request;  
-	3. shall request user authentication at LoA 3 or greater by requesting the acr claim as an essential claim as defined in section 5.5.1.1 of [OIDC];  
-	4. shall require JWS signed ID Token be returned from endpoints;  
-	5. shall verify that the acr claim in an ID Token indicates that user authentication was performed at LoA3 or greater;  
-	6. shall verify that the amr claim in an ID Token contains values appropriate for the LoA indicated by the acr claim;  
-	7. shall verify that the authorization response was not tampered using ID Token as the detached signature
+1. shall support [OAUTB] as a holder of key mechanism;  
+2.shall include the ``request`` or ``request_uri`` parameter as defined in Section 6 of [OIDC] in the authentication request;  
+3. shall request user authentication at LoA 3 or greater by requesting the ``acr`` claim as an essential claim as defined in section 5.5.1.1 of [OIDC];  
+4. shall require JWS signed ID Token be returned from endpoints;  
+5. shall verify that the ``acr`` claim in an ID Token indicates that user authentication was performed at LoA3 or greater;  
+6. shall verify that the ``amr`` claim in an ID Token contains values appropriate for the LoA indicated by the ``acr`` claim;  
+7. shall verify that the authorization response was not tampered using ID Token as the detached signature
 
 for write operations.  
 
-	1. キーメカニズムの保持者として[OAUTB]をサポートしなければならない。  
-	2. 認証リクエストに[OIDC]のセクション6で定義されているようなrequestまたはrequ_uriパラメータを含まなければならない。  
-	3. [OIDC]のセクション5.5.1.1に定義されている必須クレームとしてACRクレームを要求することによりLoA 3以上でのユーザ認証を要求しなければならない。  
-	5. JWSが署名したIDトークンがエンドポイントから返されることを要求するものとする。  
-	6. IDトークン内のACRクレームが、ユーザ認証がLoA3以上で実行されたことを示すことを検証しなければならない。  
-	7. IDトークン内のamrクレームが、acrクレームによって示されるLoAに適切な値を含むことを検証しなければならない。
-	8. 承認応答が、分離された署名としてIDトークンを使用して改ざんされていないことを検証しなければならない
+1. キーメカニズムの保持者として[OAUTB]をサポートしなければならない。  
+2. 認証リクエストに[OIDC]のセクション6で定義されているようなrequestまたはrequ_uriパラメータを含まなければならない。  
+3. [OIDC]のセクション5.5.1.1に定義されている必須クレームとしてACRクレームを要求することによりLoA 3以上でのユーザ認証を要求しなければならない。  
+4. JWSが署名したIDトークンがエンドポイントから返されることを要求するものとする。  
+5. IDトークン内のACRクレームが、ユーザ認証がLoA3以上で実行されたことを示すことを検証しなければならない。  
+6. IDトークン内のamrクレームが、acrクレームによって示されるLoAに適切な値を含むことを検証しなければならない。
+7. 承認応答が、分離された署名としてIDトークンを使用して改ざんされていないことを検証しなければならない
 書き込み操作のために。
 
 
-To verify that the authorization response was not tampered using ID Token as the detached signature, the client shall verify that s_hash value is equal to the value calculated from the state value in the authorization response in addition to all the requirements in 3.3.2.12 of [OIDC].
+To verify that the authorization response was not tampered using ID Token as the detached signature, the client shall verify that ``s_hash`` value is equal to the value calculated from the ``state`` value in the authorization response in addition to all the requirements in 3.3.2.12 of [OIDC].
 
 IDトークンを分離署名として使用して認証応答が改ざんされていないことを検証するために、クライアントは、s_hash値が[3.3.2.12]のすべての要件に加えて、認証応答の状態値から計算された値と等しいことを検証しなければならない OIDC]。
 
@@ -337,13 +339,14 @@ In addition to the provision to the Public Client and the provisions of clause 5
 
 パブリッククライアントへの規定と5.2.3項の規定に加えて、主要な機構の唯一の保有者であるOAUTBを除き、Confidential Client
 
-	1. shall support [OAUTB] or [MTLS] as a holder of key mechanism;
-	2. should require both JWS signed and JWE encrypted ID Tokens to be returned from endpoints
+1. shall support [OAUTB] or [MTLS] as a holder of key mechanism;
+2. should require both JWS signed and JWE encrypted ID Tokens to be returned from endpoints
 
 for write operations.
 
-キーメカニズムの保持者として[OAUTB]または[MTLS]をサポートしなければならない。
-エンドポイントから返されるJWS署名付きトークンとJWE暗号化IDトークンの両方が必要です
+1. キーメカニズムの保持者として[OAUTB]または[MTLS]をサポートしなければならない。
+2. エンドポイントから返されるJWS署名付きトークンとJWE暗号化IDトークンの両方が必要です
+
 書き込み操作のために。
 
 ## 6.  Accessing Protected Resources (Using tokens)
@@ -364,11 +367,13 @@ FAPIエンドポイントは、送信されたアクセストークンに関連�
 
 The protected resources supporting this document
 
-	1. shall support the provisions specified in clause 6.2.1 Financial API - Part 1: Read Only API Security Profile;
-	2. shall adhere to the requirements in [MTLS] or [OAUTB].
+1. shall support the provisions specified in clause 6.2.1 Financial API - Part 1: Read Only API Security Profile;
+2. shall adhere to the requirements in [MTLS] or [OAUTB].
 
-	1. 6.2.1金融API - 第1部：読み取り専用APIセキュリティプロファイルに規定された規定をサポートするものとする。
-	2. [MTLS]または[OAUTB]の要件を遵守しなければならない。
+//NG
+
+1. 6.2.1金融API - 第1部：読み取り専用APIセキュリティプロファイルに規定された規定をサポートするものとする。
+2. [MTLS]または[OAUTB]の要件を遵守しなければならない。
 
 #### 6.2.2.  Client provisions
 
@@ -382,11 +387,11 @@ The client supporting this document shall support the provisions specified in cl
 
 ### 7.1.  Introduction
 
-The client may not want to send the request object by value, either because it is too large, or because it contains sensitive data and the client doesn't want to encrypt the request object. In such cases it is possible to send the request object by reference using a request_uri.
+The client may not want to send the request object by value, either because it is too large, or because it contains sensitive data and the client doesn't want to encrypt the request object. In such cases it is possible to send the request object by reference using a ``request_uri``.
 
 クライアントは、値が大きすぎるか、機密データが含まれており、クライアントが要求オブジェクトを暗号化したくないために、要求オブジェクトを値で送信したくない場合があります。 このような場合、request_uriを使用して参照オブジェクトを要求によって送信することができます。
 
-Note that request_uri can be either URL or URN. If it is a URL, it shall be based on a cryptographic random value so that it is difficult to predict for the attacker.
+Note that ``request_uri`` can be either URL or URN. If it is a URL, it shall be based on a cryptographic random value so that it is difficult to predict for the attacker.
 
 request_uriは、URLまたはURNのいずれかです。 それがURLの場合、攻撃者を予測するのが難しいように暗号ランダム値に基づいていなければならない。
 
@@ -394,7 +399,7 @@ The request URI can be hosted by the client or by the authorization server. The 
 
 要求URIは、クライアントまたは許可サーバーによってホストされます。 要求オブジェクトをホストする認可サーバーの利点は、クライアントが指定した要求URIへの送信要求をサポートする必要もなく、要求オブジェクトの機密性のためにURIのエントロピーに依存しないことです。
 
-When the request object is stored at the authorization server, the request_uri value typically is a URN.
+When the request object is stored at the authorization server, the ``request_uri`` value typically is a URN.
 
 要求オブジェクトが許可サーバーに保管されるとき、request_uri値は通常URNです。
 
@@ -423,11 +428,11 @@ zCYIb_NMXvtTIVc1jpspnTSD7xMbpL-2QgwUsAlMGzw
 
 ### 7.3.  Successful response
 
-The authorization server shall verify that the request object is valid, the signature algorithm is not none, and the signature is correct as in clause 6.3 of [OIDC].
+The authorization server shall verify that the request object is valid, the signature algorithm is not ``none``, and the signature is correct as in clause 6.3 of [OIDC].
 
 認証サーバは、要求オブジェクトが有効であり、署名アルゴリズムがnoneではなく、署名が[OIDC]の6.3項のように正しいことを検証しなければならない。
 
-If the verification is successful, the server shall generate a request URI and return a JSON payload that contains request_uri, aud, iss, and exp claims at the top level with 201 Created HTTP response code.
+If the verification is successful, the server shall generate a request URI and return a JSON payload that contains ``request_uri``, ``aud``, ``iss``, and ``exp`` claims at the top level with ``201 Created`` HTTP response code.
 
 検証が成功した場合、サーバーは要求URIを生成し、request_uri、aud、iss、およびexpのクレームを含むJSONペイロードをトップレベルで201 Created HTTP応答コードで返します。
 
@@ -435,10 +440,10 @@ The value of these claims in the JSON payload shall be as follows:
 
 JSONペイロードのこれらのクレームの価値は、次のとおりです。
 
-	* request_uri : The request URI corresponding to the request object posted.
-	* aud : A JSON string that represents the client identifier of the client that posted the request object.
-	* iss : A JSON string that represents the issuer identifier of the authorization server as defined in [RFC7519]. When a pure OAuth 2.0 is used, the value is the redirection URI. When OpenID Connect is used, the value is the issuer value of the authorization server.
-	* exp : A JSON number that represents the expiry time of the request URI as defined in [RFC7519].
+* ``request_uri`` : The request URI corresponding to the request object posted.
+* ``aud`` : A JSON string that represents the client identifier of the client that posted the request object.
+* ``iss`` : A JSON string that represents the issuer identifier of the authorization server as defined in [RFC7519]. When a pure OAuth 2.0 is used, the value is the redirection URI. When OpenID Connect is used, the value is the issuer value of the authorization server.
+* ``exp`` : A JSON number that represents the expiry time of the request URI as defined in [RFC7519].
 
 The following is an example of such a response.
 
@@ -466,31 +471,31 @@ The request URI shall be bound to the client identifier of the client that poste
 
 #### 7.4.1.  Authorization required
 
-If the signature validation fails, the authorization server shall return 401 Unauthorized HTTP error response.
+If the signature validation fails, the authorization server shall return ``401 Unauthorized`` HTTP error response.
 
 署名の検証が失敗した場合、認証サーバーは401 Unauthorized HTTP error responseを返します。
 
 #### 7.4.2.  Invalid request
 
-If the request object received is invalid, the authorization server shall return 400 Bad Request HTTP error response.
+If the request object received is invalid, the authorization server shall return ``400 Bad Request`` HTTP error response.
 
 受信した要求オブジェクトが無効である場合、認証サーバーは400 Bad Request HTTPエラー応答を返します。
 
 #### 7.4.3.  Method Not Allowed
 
-If the request did not use POST, the authorization server shall return 405 Method Not Allowed HTTP error response.
+If the request did not use POST, the authorization server shall return ``405 Method Not Allowed`` HTTP error response.
 
 要求がPOSTを使用しなかった場合、許可サーバーは405 Method Not Allowed HTTPエラー応答を返します。
 
 #### 7.4.4.  Request entity too large
 
-If the request size was beyond the upper bound that the authorization server allows, the authorization server shall return a 413 Request Entity Too Large HTTP error response.
+If the request size was beyond the upper bound that the authorization server allows, the authorization server shall return a ``413 Request Entity Too Large`` HTTP error response.
 
 要求サイズが許可サーバーが許す上限を超えている場合、許可サーバーは413 Request Entity Too Large HTTPエラー応答を返さなければならない。
 
 #### 7.4.5.  Too many requests
 
-If the request from the client per a time period goes beyond the number the authorization server allows, the authorization server shall return a 429 Too Many Requests HTTP error response.
+If the request from the client per a time period goes beyond the number the authorization server allows, the authorization server shall return a ``429 Too Many Requests`` HTTP error response.
 
 ある期間にクライアントからの要求が許可サーバーの許可数を超えた場合、許可サーバーは429個の「多すぎる要求」HTTPエラー応答を戻すものとします。
 
@@ -532,11 +537,11 @@ FAPIクライアントが[MTLS]または[OAUTB]を使用する場合、認証コ
 
 #### 8.3.3.  IdP Mix-up attack
 
-In this attack, the client has registered multiple IdPs and one of them is a rogue IdP that returns the same client_id that belongs to one of the honest IdPs. When a user clicks on a malicious link or visits a compromised site, an authorization request is sent to the rogue Idp. The rogue Idp then redirects the client to the honest IdP that has the same client_id. If the user is already logged on at the honest IdP, then the authentication may be skipped and a code is generated and returned to the client. Since the client was interacting with the rogue IdP, the code is sent to the rogue IdP's token endpoint. At the point, the attacker has a valid code that can be exchanged for an Access Token at the honest IdP.
+In this attack, the client has registered multiple IdPs and one of them is a rogue IdP that returns the same ``client_id`` that belongs to one of the honest IdPs. When a user clicks on a malicious link or visits a compromised site, an authorization request is sent to the rogue Idp. The rogue Idp then redirects the client to the honest IdP that has the same ``client_id``. If the user is already logged on at the honest IdP, then the authentication may be skipped and a code is generated and returned to the client. Since the client was interacting with the rogue IdP, the code is sent to the rogue IdP's token endpoint. At the point, the attacker has a valid code that can be exchanged for an Access Token at the honest IdP.
 
 この攻撃では、クライアントは複数のIdPを登録しています。そのうちの1つは正直なIdPの1つに属する同じclient_idを返す不正なIdPです。 ユーザーが悪質なリンクをクリックしたり、侵害されたサイトにアクセスした場合、不正なIdpに認証要求が送信されます。 次に、不正なIdpは、同じclient_idを持つ正直なIdPにクライアントをリダイレクトします。 ユーザが正直なIdPですでにログオンしている場合、認証はスキップされ、コードが生成されてクライアントに返されます。 クライアントが不正なIdPと対話していたので、コードは不正なIdPのトークンエンドポイントに送信されます。 この時点で、攻撃者は正当なIdPでアクセストークンと交換できる有効なコードを持っています。
 
-This is mitigated by the use of Hybrid flow in which the Honest IdP's issuer identifier is included as the value of iss. The client then sends the code to the token endpoint that is associated with the issuer identifier thus it will not get to the attacker.
+This is mitigated by the use of Hybrid flow in which the Honest IdP's issuer identifier is included as the value of ``iss``. The client then sends the ``code`` to the token endpoint that is associated with the issuer identifier thus it will not get to the attacker.
 
 これは、Honest IdPの発行者識別子がissの値として含まれるハイブリッドフローの使用によって軽減されます。 クライアントは、コードを発行者識別子に関連付けられたトークンエンドポイントに送信します。したがって、攻撃者には届きません。
 
@@ -572,7 +577,7 @@ Attacks like Malicious Endpoint Attack requires this property to succeed.
 
 Malicious Endpoint Attackのような攻撃では、このプロパティが成功する必要があります。
 
-The use of a request object or request_uri in the authorization request will prevent tampering with the request parameters.
+The use of a ``request`` object or ``request_uri`` in the authorization request will prevent tampering with the request parameters.
 
 承認要求に要求オブジェクトまたはrequest_uriを使用すると、要求パラメータの改ざんを防止できます。  
 
@@ -587,7 +592,7 @@ This attack occurs when the victim and attacker use the same relying party clien
 
 この攻撃は、被害者と攻撃者が同じ信頼関係のクライアントを使用している場合に発生します。 攻撃者は、犠牲者の認証応答から何らかの形で認証コードと状態を取得し、自身の認証応答でそれらを使用することができます。
 
-This can be mitigated by using hybrid flow where the c_hash, at_hash, and s_hash can be used to verify the validity of the authorization code, access token, and state parameters. The server can verify that the state is the same as what was stored in the browser session at the time of the authorization request.
+This can be mitigated by using hybrid flow where the ``c_hash``, ``at_hash``, and ``s_hash`` can be used to verify the validity of the authorization code, access token, and state parameters. The server can verify that the state is the same as what was stored in the browser session at the time of the authorization request.
 
 これは、c_hash、at_hash、およびs_hashを使用して、認証コード、アクセストークン、および状態パラメータの有効性を検証するために使用できるハイブリッドフローを使用することによって軽減できます。 サーバーは、認証要求の時点でブラウザセッションに格納された状態と同じ状態であることを確認できます。
 
@@ -601,18 +606,18 @@ The recommendations for Secure Use of Transport Layer Security in BCP195 shall b
 
 BCP195のトランスポート層セキュリティの安全な使用に関する推奨事項に従わなければならず、以下の追加要件が必要となる。
 
-	1. Only the following 4 cipher suites shall be permitted:
-		* TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
-		* TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-		* TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
-		* TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	2. TLS version 1.2 or later shall be used for all communications.
-	3. A TLS server certificate check shall be performed, as per [RFC6125].
+1. Only the following 4 cipher suites shall be permitted:
+	* TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+	* TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	* TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+	* TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+2. TLS version 1.2 or later shall be used for all communications.
+3. A TLS server certificate check shall be performed, as per [RFC6125].
 
 
 ### 8.6.  JWS algorithm considerations
 
-JWS signatures shall use the PS256 or ES256 algorithms for signing.
+JWS signatures shall use the ``PS256`` or ``ES256`` algorithms for signing.
 
 JWS署名は、署名にPS256またはES256アルゴリズムを使用するものとする。
 
